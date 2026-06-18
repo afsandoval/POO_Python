@@ -60,7 +60,10 @@ class Usuario:
         else:
             print(f"⚠️ Advertencia: El usuario {self.nombre} no se encuentra en el sistema.")
     
-        
+    # Método que dejaremos preparado para aplicar Polimorfismo más adelante
+    def consultar_certificado(self):
+        # Cada clase hija decidirá cómo implementar este certificado
+        pass
         
 #Creando una Instancia de la Clase Usuario
 usuario_1 = Usuario(1,10532457,"Falcao", "Garcia","fgarcia@gmail.com","321321312","Calle 123")
@@ -89,6 +92,101 @@ usuario_1.ver_usuario()
 #Llamar los Metodos DELETE
 usuario_2.eliminar_usuario()
 
+# ----------------------------------------------------------------------------------
+# APLICANDO LOS 4 PILARES DE LA POO
+#-----------------------------------------------------------------------------------
+
+# HERENCIA y ENCAPSULAMIENTO APRENDIZ
+
+# La clase 'Aprendiz' hereda todos los atributos y métodos de 'Usuario'
+class Aprendiz(Usuario):
+    def __init__(self, id_usuario, documento, nombre, apellido, correo, telefono, direccion, programa, ficha):
+        # Usamos super() para llamar al constructor de la clase padre (Usuario)
+        super().__init__(id_usuario, documento, nombre, apellido, correo, telefono, direccion)
+        
+        # Atributos propios del Aprendiz
+        self.programa = programa
+        self.ficha = ficha
+        
+        # ENCAPSULAMIENTO: Usamos un atributo privado para almacenar los resultados académicos del aprendiz
+        self.__resultados = [] 
+
+    # Método público para modificar el atributo privado de forma controlada
+    def registrar_resultado(self, nota):
+        self.__resultados.append(nota)
+        print(f"📝 Resultado guardado para el aprendiz {self.nombre}. Total notas: {len(self.__resultados)}")
+
+    # 4. POLIMORFISMO
+    # Sobrescribimos el método de la clase padre para darle un comportamiento específico
+    def consultar_certificado(self):
+        print(f"🎓 [CERTIFICADO DE APRENDIZ] Generando certificado de notas del programa {self.programa} para {self.nombre}.")
+
+
+
+# HERENCIA Y POLIMORFISMO EN CLASE INSTRUCTOR
+
+class Instructor(Usuario):
+    def __init__(self, id_usuario, documento, nombre, apellido, correo, telefono, direccion, perfil_profesional, anios_experiencia):
+        super().__init__(id_usuario, documento, nombre, apellido, correo, telefono, direccion)
+        # Atributos propios del Instructor
+        self.perfil_profesional = perfil_profesional
+        self.anios_experiencia = anios_experiencia
+
+    # 4. POLIMORFISMO
+    # El instructor tiene una forma diferente de generar su certificado
+    def consultar_certificado(self):
+        print(f"💼 [CERTIFICADO DE INSTRUCTOR] Generando constancia laboral para {self.nombre}, Perfil: {self.perfil_profesional}.")
+
+
+
+# INSTANCIACIÓN
+
+if __name__ == "__main__":
+    print("\n--- INSTANCIANDO OBJETOS ---")
+    
+    # Creamos la instancia de Aprendiz (afsandoval)
+    afsandoval = Aprendiz(
+        id_usuario=1, 
+        documento="1052401097", 
+        nombre="Andres Felipe", 
+        apellido="Sandoval Higuera", 
+        correo="afsandoval@gmail.com", 
+        telefono="321481513", 
+        direccion="Carrera 123",
+        programa="Análisis y Desarrollo de Software",
+        ficha="2550001"
+    )
+
+    # Creamos la instancia de Instructor (james94)
+    james94 = Instructor(
+        id_usuario=2, 
+        documento="1023123123", 
+        nombre="James", 
+        apellido="Rodriguez", 
+        correo="jrodriguez@gmail.com", 
+        telefono="32112312312", 
+        direccion="Calle 2132312",
+        perfil_profesional="Ingeniero de Sistemas",
+        anios_experiencia=5
+    )
+
+    print("\n--- PRUEBA DE MÉTODOS CRUD (Gestión con Listas) ---")
+    afsandoval.crear_usuario()
+    james94.crear_usuario()
+
+    print("\nUsuarios actualmente en la lista:")
+    for usuario in lista_usuarios:
+        usuario.ver_usuario()
+
+    print("\n--- PRUEBA DE ENCAPSULAMIENTO ---")
+    # Intentar hacer afsandoval.__resultados = ["A"] daría error.
+    # Usamos el método permitido para interactuar con la variable privada:
+    afsandoval.registrar_resultado("Aprobado - Competencia de Programación")
+
+    print("\n--- PRUEBA DE POLIMORFISMO ---")
+    # Llamamos al mismo método, pero cada objeto responde de forma diferente
+    afsandoval.consultar_certificado()
+    james94.consultar_certificado()
 
 
 
